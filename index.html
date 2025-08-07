@@ -8,7 +8,8 @@
     <link rel="stylesheet" href="styles.css" />
 
     <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
+      import { initializeApp } from "firebase/app";
+      import { getAnalytics } from "firebase/analytics";
       import {
         getDatabase,
         ref,
@@ -19,14 +20,16 @@
       const firebaseConfig = {
         apiKey: "AIzaSyBhHHpiHerkygBFs0tUO8qdeiVbMKJ6iwg",
         authDomain: "automatizacion-20cff.firebaseapp.com",
-        databaseURL:
-          "https://automatizacion-20cff-default-rtdb.firebaseio.com/",
+        databaseURL: "https://automatizacion-20cff-default-rtdb.firebaseio.com",
         projectId: "automatizacion-20cff",
-        storageBucket: "automatizacion-20cff.appspot.com",
+        storageBucket: "automatizacion-20cff.firebasestorage.app",
+        messagingSenderId: "1089538837111",
+        appId: "1:1089538837111:web:2e41e37e8747a34603d472",
+        measurementId: "G-3KHHJ9YJSH",
       };
 
       const app = initializeApp(firebaseConfig);
-      const db = getDatabase(app);
+      const analytics = getAnalytics(app);
 
       function updateSensorData(sensor, value, status) {
         document.getElementById(sensor).textContent = value;
