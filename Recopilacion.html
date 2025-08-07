@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Invernadero Automático</title>
+    <link rel="stylesheet" href="Recopilacion.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>🌱 Invernadero Automático</h1>
+        <p>Monitoreo en tiempo real</p>
+      </header>
+
+      <main>
+        <!-- Sección de datos (sin cambios) -->
+        <div class="sensor-data">
+          <div class="data-card">
+            <h2>🌡️ Temperatura</h2>
+            <p class="value" id="temperature">-- °C</p>
+            <p class="status">
+              Estado: <span id="temp-status">Esperando datos...</span>
+            </p>
+          </div>
+
+          <div class="data-card">
+            <h2>💧 Humedad</h2>
+            <p class="value" id="humidity">-- %</p>
+            <p class="status">
+              Estado: <span id="humidity-status">Esperando datos...</span>
+            </p>
+          </div>
+
+          <div class="data-card">
+            <h2>☀️ Luz</h2>
+            <p class="value" id="light">--</p>
+            <p class="status">
+              Estado: <span id="light-status">Esperando datos...</span>
+            </p>
+          </div>
+        </div>
+
+        <!-- Nuevos botones de control -->
+        <div class="controls">
+          <h2>⚙️ Controles Manuales</h2>
+          <div class="control-buttons">
+            <button id="water-pump-btn" class="btn pump-off">
+              💦 Encender Bomba de Agua
+            </button>
+            <button id="lights-off-btn" class="btn lights-off">
+              🔦 Forzar Apagado de Luces
+            </button>
+          </div>
+          <p id="control-status">Modo automático activado.</p>
+        </div>
+
+        <!-- Gráfico simulado (sin cambios) -->
+        <div class="chart-container">
+          <h2>📊 Historial de Datos</h2>
+          <div class="chart-placeholder">
+            <p>(Aquí irá un gráfico con datos de temperatura, humedad y luz)</p>
+          </div>
+        </div>
+      </main>
+
+      <footer>
+        <p>Sistema de monitoreo para invernadero | © 2024</p>
+      </footer>
+    </div>
+
+    <!-- (JavaScript futuro) -->
+    <!-- <script src="script.js"></script> -->
+  </body>
+</html>
