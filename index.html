@@ -6,6 +6,115 @@
     <title>Invernadero Automático</title>
     <link rel="icon" type="image/png" href="favicon.png" />
     <link rel="stylesheet" href="styles.css" />
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
+      import {
+        getDatabase,
+        ref,
+        onValue,
+        runTransaction,
+      } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyBhHHpiHerkygBFs0tUO8qdeiVbMKJ6iwg",
+        authDomain: "automatizacion-20cff.firebaseapp.com",
+        databaseURL:
+          "https://automatizacion-20cff-default-rtdb.firebaseio.com/",
+        projectId: "automatizacion-20cff",
+        storageBucket: "automatizacion-20cff.appspot.com",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const db = getDatabase(app);
+
+      function updateSensorData(sensor, value, status) {
+        document.getElementById(sensor).textContent = value;
+        document.getElementById(sensor + "-status").textContent = status;
+      }
+
+      function setupFirebaseListeners() {
+        onValue(ref(db, "invernadero/temperatura"), (snapshot) => {
+          const data = snapshot.val();
+          updateSensorData(
+            "temperature",
+            data.valor + " °C",
+            data.estado || "Actualizado"
+          );
+        });
+
+        onValue(ref(db, "invernadero/humedad"), (snapshot) => {
+          const data = snapshot.val();
+          updateSensorData(
+            "humidity",
+            data.valor + " %",
+            data.estado || "Actualizado"
+          );
+        });
+
+        onValue(ref(db, "invernadero/luz"), (snapshot) => {
+          const data = snapshot.val();
+          const lightStatus = data.valor ? "Día" : "Noche";
+          updateSensorData("light", lightStatus, data.estado || "Actualizado");
+        });
+
+        onValue(ref(db, "invernadero/controles"), (snapshot) => {
+          const data = snapshot.val();
+          if (data) {
+            const pumpBtn = document.getElementById("water-pump-btn");
+            const lightsBtn = document.getElementById("lights-off-btn");
+
+            if (data.bomba) {
+              pumpBtn.textContent = "💦 Apagar Bomba de Agua";
+              pumpBtn.classList.add("pump-on");
+              pumpBtn.classList.remove("pump-off");
+            } else {
+              pumpBtn.textContent = "💦 Encender Bomba de Agua";
+              pumpBtn.classList.add("pump-off");
+              pumpBtn.classList.remove("pump-on");
+            }
+
+            if (data.luces) {
+              lightsBtn.textContent = "🔦 Encender Luces";
+              lightsBtn.classList.add("lights-off-active");
+              lightsBtn.classList.remove("lights-off");
+            } else {
+              lightsBtn.textContent = "🔦 Forzar Apagado de Luces";
+              lightsBtn.classList.add("lights-off");
+              lightsBtn.classList.remove("lights-off-active");
+            }
+
+            document.getElementById("control-status").textContent =
+              data.modo || "Modo automático activado";
+          }
+        });
+      }
+
+      function toggleWaterPump() {
+        const bombaRef = ref(db, "invernadero/controles/bomba");
+        runTransaction(bombaRef, (current) => {
+          return current === true ? false : true;
+        });
+      }
+
+      function toggleLights() {
+        const lucesRef = ref(db, "invernadero/controles/luces");
+        runTransaction(lucesRef, (current) => {
+          return current === true ? false : true;
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        setupFirebaseListeners();
+
+        document
+          .getElementById("water-pump-btn")
+          .addEventListener("click", toggleWaterPump);
+        document
+          .getElementById("lights-off-btn")
+          .addEventListener("click", toggleLights);
+      });
+    </script>
   </head>
   <body>
     <div class="container">
@@ -15,7 +124,7 @@
       </header>
 
       <main>
-        <!-- Sección de datos (sin cambios) -->
+        <!-- Sección de datos -->
         <div class="sensor-data">
           <div class="data-card">
             <h2>🌡️ Temperatura</h2>
@@ -42,7 +151,7 @@
           </div>
         </div>
 
-        <!-- Nuevos botones de control -->
+        <!-- Controles manuales -->
         <div class="controls">
           <h2>⚙️ Controles Manuales</h2>
           <div class="control-buttons">
@@ -56,7 +165,7 @@
           <p id="control-status">Modo automático activado.</p>
         </div>
 
-        <!-- Gráfico simulado (sin cambios) -->
+        <!-- Gráfico simulado -->
         <div class="chart-container">
           <h2>📊 Historial de Datos</h2>
           <div class="chart-placeholder">
@@ -69,8 +178,5 @@
         <p>Sistema de monitoreo para invernadero | © 2024</p>
       </footer>
     </div>
-
-    <!-- (JavaScript futuro) -->
-    <!-- <script src="script.js"></script> -->
   </body>
 </html>
