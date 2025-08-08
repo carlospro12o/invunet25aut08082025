@@ -8,115 +8,27 @@
     <link rel="stylesheet" href="styles.css" />
 
     <script type="module">
-      import { initializeApp } from "firebase/app";
-      import { getAnalytics } from "firebase/analytics";
-      import {
-        getDatabase,
-        ref,
-        onValue,
-        runTransaction,
-      } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js";
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-analytics.js";
+      // TODO: Add SDKs for Firebase products that you want to use
+      // https://firebase.google.com/docs/web/setup#available-libraries
 
+      // Your web app's Firebase configuration
+      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
       const firebaseConfig = {
-        apiKey: "AIzaSyBhHHpiHerkygBFs0tUO8qdeiVbMKJ6iwg",
-        authDomain: "automatizacion-20cff.firebaseapp.com",
-        databaseURL: "https://automatizacion-20cff-default-rtdb.firebaseio.com",
-        projectId: "automatizacion-20cff",
-        storageBucket: "automatizacion-20cff.firebasestorage.app",
-        messagingSenderId: "1089538837111",
-        appId: "1:1089538837111:web:2e41e37e8747a34603d472",
-        measurementId: "G-3KHHJ9YJSH",
+        apiKey: "AIzaSyAdF3v1I9a6cFVcLBE24Sy8EICiV1c3r3M",
+        authDomain: "automatizacionarduino.firebaseapp.com",
+        projectId: "automatizacionarduino",
+        storageBucket: "automatizacionarduino.firebasestorage.app",
+        messagingSenderId: "224255036880",
+        appId: "1:224255036880:web:d62a4716e10ba4e8fa3dd5",
+        measurementId: "G-9CZ9GR0YR5",
       };
 
+      // Initialize Firebase
       const app = initializeApp(firebaseConfig);
       const analytics = getAnalytics(app);
-
-      function updateSensorData(sensor, value, status) {
-        document.getElementById(sensor).textContent = value;
-        document.getElementById(sensor + "-status").textContent = status;
-      }
-
-      function setupFirebaseListeners() {
-        onValue(ref(db, "invernadero/temperatura"), (snapshot) => {
-          const data = snapshot.val();
-          updateSensorData(
-            "temperature",
-            data.valor + " °C",
-            data.estado || "Actualizado"
-          );
-        });
-
-        onValue(ref(db, "invernadero/humedad"), (snapshot) => {
-          const data = snapshot.val();
-          updateSensorData(
-            "humidity",
-            data.valor + " %",
-            data.estado || "Actualizado"
-          );
-        });
-
-        onValue(ref(db, "invernadero/luz"), (snapshot) => {
-          const data = snapshot.val();
-          const lightStatus = data.valor ? "Día" : "Noche";
-          updateSensorData("light", lightStatus, data.estado || "Actualizado");
-        });
-
-        onValue(ref(db, "invernadero/controles"), (snapshot) => {
-          const data = snapshot.val();
-          if (data) {
-            const pumpBtn = document.getElementById("water-pump-btn");
-            const lightsBtn = document.getElementById("lights-off-btn");
-
-            if (data.bomba) {
-              pumpBtn.textContent = "💦 Apagar Bomba de Agua";
-              pumpBtn.classList.add("pump-on");
-              pumpBtn.classList.remove("pump-off");
-            } else {
-              pumpBtn.textContent = "💦 Encender Bomba de Agua";
-              pumpBtn.classList.add("pump-off");
-              pumpBtn.classList.remove("pump-on");
-            }
-
-            if (data.luces) {
-              lightsBtn.textContent = "🔦 Encender Luces";
-              lightsBtn.classList.add("lights-off-active");
-              lightsBtn.classList.remove("lights-off");
-            } else {
-              lightsBtn.textContent = "🔦 Forzar Apagado de Luces";
-              lightsBtn.classList.add("lights-off");
-              lightsBtn.classList.remove("lights-off-active");
-            }
-
-            document.getElementById("control-status").textContent =
-              data.modo || "Modo automático activado";
-          }
-        });
-      }
-
-      function toggleWaterPump() {
-        const bombaRef = ref(db, "invernadero/controles/bomba");
-        runTransaction(bombaRef, (current) => {
-          return current === true ? false : true;
-        });
-      }
-
-      function toggleLights() {
-        const lucesRef = ref(db, "invernadero/controles/luces");
-        runTransaction(lucesRef, (current) => {
-          return current === true ? false : true;
-        });
-      }
-
-      document.addEventListener("DOMContentLoaded", () => {
-        setupFirebaseListeners();
-
-        document
-          .getElementById("water-pump-btn")
-          .addEventListener("click", toggleWaterPump);
-        document
-          .getElementById("lights-off-btn")
-          .addEventListener("click", toggleLights);
-      });
     </script>
   </head>
   <body>
